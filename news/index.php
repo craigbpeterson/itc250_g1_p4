@@ -4,7 +4,7 @@
  *
  * @package SurveySez
  * @author Craig Peterson <craig.b.peterson@gmail.com>
- * @version .1 2018/06/01
+ * @version .2 2018/06/01
  * @link http://craigpeterson.video/itc250/sp18_surveysez/
  * @license https://www.apache.org/licenses/LICENSE-2.0
  * @see news_view.php
@@ -15,17 +15,6 @@
 require '../inc_0700/config_inc.php'; #provides configuration, pathing, error handling, db credentials 
  
 # SQL statement
-//$sql = "select * from sp18_surveys";
-
-/*
-$sql = 
-"
-select CONCAT(a.FirstName, ' ', a.LastName) AdminName, s.SurveyID, s.Title, s.Description, 
-date_format(s.DateAdded, '%W %D %M %Y %H:%i') 'DateAdded' from "
-. PREFIX . "surveys s, " . PREFIX . "Admin a where s.AdminID=a.AdminID order by s.DateAdded desc
-";
-*/
-
 $sql = 
 "
 select c.RSSCategoryID, c.Category, c.Description as CategoryDescription, f.FeedID, f.FeedURL, f.Title, f.Description as FeedDescription, 
@@ -58,12 +47,6 @@ $sql = $myPager->loadSQL($sql);  #load SQL, add offset
 
 # connection comes first in mysqli (improved) function
 $result = mysqli_query(IDB::conn(),$sql) or die(trigger_error(mysqli_error(IDB::conn()), E_USER_ERROR));
-
-/*
-//check $result
-$dataArray = mysqli_fetch_all($result,MYSQLI_ASSOC);
-dumpdie($dataArray);
-*/
 
 if(mysqli_num_rows($result) > 0)
 {#records exist - process
@@ -105,20 +88,7 @@ if(mysqli_num_rows($result) > 0)
             <tbody>';
         }
         
-        /*
-        echo '
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">Title</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Date Added</th>
-                </tr>
-            </thead>
-            <tbody>
-        ';
-        */
-        
+        //generate table row for each rss feed
         echo '
             <tr>
                 <td><a href="' . VIRTUAL_PATH . 'news/news_view.php?id=' . (int)$row['FeedID'] . '">' . dbOut($row['Title']) . '</a></td>
