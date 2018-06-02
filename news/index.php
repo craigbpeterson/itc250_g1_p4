@@ -53,12 +53,12 @@ if(mysqli_num_rows($result) > 0)
 	//if($myPager->showTotal()==1){$itemz = "survey";}else{$itemz = "surveys";}  //deal with plural
     //echo '<div align="center">We have ' . $myPager->showTotal() . ' ' . $itemz . '!</div>';
     
-    $prev = null;
+    $prevrow = null;
     
 	while($row = mysqli_fetch_assoc($result))
 	{# process each row
         
-        if($prev == null){//if first row, display category name and description and start table
+        if($prevrow == null){//if first row, display category name and description and start table
         echo '
         <h4>' . dbOut($row['Category']) . ': <small class="text-info"> ' . dbOut($row['CategoryDescription']) . '</small></h4>
         <table class="table table-hover">
@@ -72,7 +72,7 @@ if(mysqli_num_rows($result) > 0)
             <tbody>';
         }
         
-        if($prev['Category'] != $row['Category'] && $prev != null){//finish previous table, display next category name and description, and start new table
+        if($prevrow['Category'] != $row['Category'] && $prevrow != null){//finish previous table, display next category name and description, and start new table
         echo '
             </tbody>
         </table>
@@ -97,7 +97,7 @@ if(mysqli_num_rows($result) > 0)
             </tr>
         ';
         
-        $prev = $row; //set $prev to the row we just finished processing
+        $prevrow = $row; //set $prev to the row we just finished processing
         //var_dump($prev);
 	}
     
