@@ -43,7 +43,7 @@ echo '<h3 align="center">' . $myPager->Title . ' News Feed</h3>';
 
 if($myPager->IsValid)
 {//show data
-   echo '<div>News Description: ' . $myPager->Description . '</div>'; 
+   echo '<div>News Description: ' . $myPager->FeedDescription . '</div>'; 
 }else{//problem!
    echo '<div>No News Feeds</div>';
 }    
@@ -54,9 +54,9 @@ class Survey
 {
     public $FeedID = 0;
     public $Title = '';
-    public $Description = '';
+    public $FeedDescription = '';
     public $IsValid = false;
-    public $Questions = array();
+   
     
     public function __construct($id){
         $this->FeedID = (int)$id;
@@ -72,7 +72,7 @@ class Survey
                while ($row = mysqli_fetch_assoc($result))
                {
                     $this->Title = dbOut($row['Title']);
-                    $this->Description = dbOut($row['Description']);
+                    $this->Description = dbOut($row['FeedDescription']);
                }
         }
 
@@ -91,7 +91,7 @@ class Survey
                {
                     //$this->Title = dbOut($row['Title']);
                     //$this->Description = dbOut($row['Description']);
-                   $this->Feeds[] = new Feed((int)$row['FeedID'],dbOut($row['FeedURL']),dbOut($row['Description']));
+                   $this->Feeds[] = new Feed((int)$row['FeedID'],dbOut($row['FeedURL']),dbOut($row['FeedDescription']));
                }
         }
 
@@ -125,12 +125,12 @@ LastUpdated	timestamp NULL [0000-00-00 00:00:00]
 class Question{
     public $FeedID = 0;
     public $FeedURL = '';
-    public $Description = '';
+    public $FeedDescription = '';
     
-    public function __construct($FeedID,$FeedURL,$Description){
+    public function __construct($FeedID,$FeedURL,$FeedDescription){
         $this->FeedID = (int)$FeedID;
         $this->FeedURL = $FeedURL;
-        $this->Description = $Description;
+        $this->Description = $FeedDescription;
     }//end Feed constructor
     
 }//end Feed Class
