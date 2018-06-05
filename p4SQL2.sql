@@ -71,7 +71,7 @@ INSERT INTO sp18_rss_feeds VALUES (
 INSERT INTO sp18_rss_feeds VALUES (
     NULL,
     2,
-    'hhttps://www.huffingtonpost.com/section/celebrity/feed',
+    'https://www.huffingtonpost.com/section/celebrity/feed',
     'Huffington Post Celebrity News',
     'Latest News about Celebrities from Huffington Post',
     NOW(),
