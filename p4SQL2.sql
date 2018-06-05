@@ -1,6 +1,5 @@
 SET foreign_key_checks = 0; #turn off constraints temporarily
 
-
 DROP TABLE IF EXISTS `sp18_rss_categories`;
 CREATE TABLE sp18_rss_categories(
 RSSCategoryID INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -11,6 +10,8 @@ PRIMARY KEY (RSSCategoryID)
 
 #add the category records:
 INSERT INTO sp18_rss_categories VALUES (NULL,'NASA','News from NASA.gov');
+INSERT INTO sp18_rss_categories VALUES (NULL,'HuffPo','Popular News from Huffington Post');
+INSERT INTO sp18_rss_categories VALUES (NULL,'Travel','Travel news and blogs');
 
 DROP TABLE IF EXISTS `sp18_rss_feeds`;
 CREATE TABLE sp18_rss_feeds(
@@ -57,6 +58,35 @@ INSERT INTO sp18_rss_feeds VALUES (
     NOW()
 );
 
+#HuffPo
+INSERT INTO sp18_rss_feeds VALUES (
+    NULL,
+    2,
+    'https://www.huffingtonpost.com/section/business/feed',
+    'Huffington Post Business News',
+    'The latest news about Business from Huffington Post',
+    NOW(),
+    NOW()
+);
+INSERT INTO sp18_rss_feeds VALUES (
+    NULL,
+    2,
+    'hhttps://www.huffingtonpost.com/section/celebrity/feed',
+    'Huffington Post Celebrity News',
+    'Latest News about Celebrities from Huffington Post',
+    NOW(),
+    NOW()
+);
+INSERT INTO sp18_rss_feeds VALUES (
+    NULL,
+    2,
+    'https://www.huffingtonpost.com/section/taste/feed',
+    'Huffington Post Food and Drink News',
+    'The latest news about food and drink lifestyle from Huffington Post',
+    NOW(),
+    NOW()
+);
+
 #Travel
 INSERT INTO sp18_rss_feeds VALUES (
     NULL,
@@ -87,6 +117,5 @@ INSERT INTO sp18_rss_feeds VALUES (
     NOW(),
     NOW()
 );
-
 
 SET foreign_key_checks = 1; #turn on constraints
