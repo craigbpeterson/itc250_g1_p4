@@ -4,7 +4,7 @@
  * 
  * @package RSSNews (the Feed class has not moved out of this document yet)
  * @author Craig Peterson <craig.b.peterson@gmail.com>
- * @version .1 2018/06/04
+ * @version .2 2018/06/06
  * @link http://craigpeterson.video/
  * @license https://www.apache.org/licenses/LICENSE-2.0
  * @see index.php
@@ -31,13 +31,35 @@ if($myFeed->IsValid)
 	$config->titleTag = $myFeed->Title . " | RSS Feeds made with PHP & love!"; #overwrite
 }
 
-//get rss feed xml
-$feedXML = $myFeed->FeedURL;
-$xml = simplexml_load_file($feedXML);
+if(!isset($_SESSION)){
+    session_start();
+}
+
+if(isset($_GET['clearCache'])){
+    unset($_SESSION['FeedID' . $myID]);
+}
+
+//get rss feed xml from session cache or from source
+if((!isset($_SESSION['FeedID' . $myID])) || ((time() - $_SESSION['FeedID' . $myID . 'CacheTime']) > 600)) {
+    $feedXML = $myFeed->FeedURL; //get rss XML url string from Feed object
+    $xml = simplexml_load_file($feedXML);//get RSS XML file from source and convert to object
+    $_SESSION['FeedID' . $myID] = $xml->asXML(); //convert XML object to serialized string and save to SESSION cache
+    $_SESSION['FeedID' . $myID . 'CacheTime'] = time();
+}else{
+    $xml = new SimpleXMLElement($_SESSION['FeedID' . $myID]); //retrieve XML serialized string from SESSION cache and convert back to XML object    
+}
+
+//dumpDie($_GET);
+//dumpDie($_SESSION);
+//dumpDie($xml);
 
 //parse the news items
 $feedItems = $xml->xPath('/rss/channel/item');
 
+//format session cache date and time
+$feedCacheTime = date('F j, Y \a\t g:ia', $_SESSION['FeedID' . $myID . 'CacheTime']); //date format example: June 6, 2018 at 1:39pm
+
+//dumpDie($feedCacheTime);
 //dumpDie($feedItems);
 
 # END CONFIG AREA ---------------------------------------------------------- 
@@ -47,6 +69,7 @@ get_header(); #defaults to theme header or header_inc.php
 echo '
     <h3 align="center">' . $myFeed->Title . '</h3>
     <p align="center">' . $myFeed->Description . '</p>
+    <p align="center">Feed cached at: ' . $feedCacheTime . ' [ <a href="?id=' . $myID . '&clearCache=true">Clear cache and reload</a> ]</p>
 ';
     
 if($myFeed->IsValid)
