@@ -31,11 +31,24 @@ $config->metaKeywords = 'RSS News Feeds,PHP,Fun,'. $config->metaKeywords;
 //adds font awesome icons for arrows on pager
 $config->loadhead .= '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">';
 
+//check query string and clear all feed data from the SESSION variable
+if(isset($_GET['clearAllFeeds'])){
+    foreach($_SESSION as $key => $value){
+        if(strpos($key,'FeedID') !== false){
+            unset($_SESSION[$key]);
+        }
+    }
+}
+
 # END CONFIG AREA ---------------------------------------------------------- 
 
 get_header(); #defaults to theme header or header_inc.php
 
-echo '<h3 align="center">RSS News Feeds</h3>';
+echo '
+    <h3 align="center">RSS News Feeds</h3>
+    <p align="center">[ <a href="?clearAllFeeds=true">Clear cache for all feeds</a> ]</p>
+';
+
 
 #images in this case are from font awesome
 $prev = '<i class="fa fa-chevron-circle-left"></i>';

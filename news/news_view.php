@@ -49,6 +49,8 @@ if((!isset($_SESSION['FeedID' . $myID])) || ((time() - $_SESSION['FeedID' . $myI
     $xml = new SimpleXMLElement($_SESSION['FeedID' . $myID]); //retrieve XML serialized string from SESSION cache and convert back to XML object    
 }
 
+$namespaces = $xml->getNamespaces(true); //get namespaces from xml (needed to parse media:content tags in certain rss feeds)
+
 //dumpDie($_GET);
 //dumpDie($_SESSION);
 //dumpDie($xml);
@@ -58,6 +60,8 @@ $feedItems = $xml->xPath('/rss/channel/item');
 
 //format session cache date and time
 $feedCacheTime = date('F j, Y \a\t g:ia', $_SESSION['FeedID' . $myID . 'CacheTime']); //date format example: June 6, 2018 at 1:39pm
+
+
 
 //dumpDie($feedCacheTime);
 //dumpDie($feedItems);
@@ -81,10 +85,18 @@ if($myFeed->IsValid)
     ';
     
     foreach($feedItems as $item){
+        if($item->enclosure){
+            $imgsrc = $item->enclosure->attributes()->url;
+        }elseif($item->children($namespaces['media'])){
+            $imgsrc = $item->children($namespaces['media'])->content->attributes()->url;
+        }else{
+            $imgsrc = 'imageunavailable.png';
+        }
+        
         echo '
             <a href="' . $item->link . '" class="list-group-item list-group-item-action flex-column align-items-start" target="_blank" style="overflow:auto;">
                 <div class="d-flex w-100 justify-content-between">
-                    <img src="' . $item->enclosure->attributes()->url . '" style="width:150px;float:left;margin-right:1rem;"/>
+                    <img src="' . $imgsrc . '" style="width:150px;float:left;margin-right:1rem;"/>
                     <h4 style="margin-bottom:0;">' . $item->title . '</h4>
                     <small>' . $item->pubDate . '</small>
                 </div>
